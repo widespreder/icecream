@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>グラスミス アイスクリーム - 在庫一覧</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'M PLUS 2', 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+    background: #F5F4F1; color: #1A1A1A; min-height: 100vh;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px) } to { opacity:1; transform:translateY(0) } }
+
+  /* Header */
+  .header { padding: 48px 24px 40px; text-align: center; background: linear-gradient(180deg, #FAFAF8, #F5F4F1); }
+  .header-sub { font: 600 11px/1 'DM Sans', sans-serif; letter-spacing: 0.25em; color: #C0B8A8; text-transform: uppercase; margin-bottom: 10px; }
+  .header-title { font-size: 32px; font-weight: 900; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .header-desc { font-size: 13px; font-weight: 500; letter-spacing: 0.2em; color: #A0988C; margin-bottom: 20px; }
+  .header-line { width: 40px; height: 2px; background: #DDD8D0; margin: 0 auto 14px; border-radius: 1px; }
+  .header-date { font-size: 10px; color: #C4BAB0; letter-spacing: 0.08em; }
+
+  /* Content */
+  .content { max-width: 620px; margin: 0 auto; padding: 0 20px 80px; }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 24px; animation: fadeUp 0.5s ease 0.1s both; }
+  .stat-card { background: #fff; border-radius: 14px; padding: 18px 14px; text-align: center; border: 1px solid #EEEBE6; }
+  .stat-value { font: 900 30px/1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; }
+  .stat-label { font-size: 10px; font-weight: 700; color: #BBB; margin-top: 6px; letter-spacing: 0.06em; }
+
+  /* Filters */
+  .filters { display: flex; gap: 8px; margin-bottom: 32px; flex-wrap: wrap; justify-content: center; animation: fadeUp 0.5s ease 0.15s both; }
+  .ftab {
+    padding: 8px 18px; border-radius: 20px; font-size: 12px; font-weight: 700;
+    border: 1.5px solid #E0DDD8; background: #fff; color: #999; cursor: pointer;
+    transition: all 0.25s; font-family: inherit; white-space: nowrap;
+  }
+  .ftab:hover { border-color: #bbb; color: #666; }
+  .ftab.on { background: #1A1A1A; color: #fff; border-color: #1A1A1A; }
+
+  /* Category */
+  .cat-label { font-size: 11px; font-weight: 800; letter-spacing: 0.16em; color: #B0A898; margin-bottom: 14px; padding-left: 2px; }
+
+  /* Item rows */
+  .item-row {
+    background: #fff; border-radius: 12px; padding: 14px 18px;
+    border: 1px solid #EEEBE6; display: flex; align-items: center; gap: 14px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease; margin-bottom: 6px;
+  }
+  .item-row:hover { transform: translateX(4px); box-shadow: 0 4px 20px rgba(0,0,0,0.04); }
+  .item-row.out { opacity: 0.5; background: #F8F7F5; }
+  .color-bar { width: 4px; height: 44px; border-radius: 2px; flex-shrink: 0; }
+  .item-info { flex: 1; min-width: 0; }
+  .item-name-row { display: flex; align-items: baseline; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+  .item-name { font-size: 14px; font-weight: 700; }
+  .item-name.out-text { color: #bbb; text-decoration: line-through; text-decoration-color: #ddd; }
+  .item-price { font: 800 13px/1 'DM Sans', sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .item-price .tax { font-size: 9px; font-weight: 600; color: #AAA; margin-left: 2px; }
+  .price-tbd { font-size: 10px; font-weight: 600; color: #ccc; }
+
+  /* Stock bar */
+  .stock-row { display: flex; align-items: center; gap: 10px; }
+  .stock-track { flex: 1; height: 6px; border-radius: 3px; background: rgba(0,0,0,0.05); overflow: hidden; }
+  .stock-fill { height: 100%; border-radius: 3px; transition: width 0.8s cubic-bezier(0.25,0.8,0.25,1); }
+  .stock-num { font: 900 20px/1 'DM Sans', sans-serif; min-width: 32px; text-align: right; font-variant-numeric: tabular-nums; }
+  .stock-out-label { font-size: 11px; font-weight: 800; color: #ccc; letter-spacing: 0.1em; }
+
+  /* Loading / Error */
+  .msg { text-align: center; padding: 60px 20px; color: #aaa; font-size: 13px; font-weight: 600; }
+
+  /* Empty */
+  .empty { text-align: center; padding: 60px 0; color: #ccc; font-size: 13px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <p class="header-sub">I love IceCream</p>
+  <h1 class="header-title">グラスミス</h1>
+  <p class="header-desc">アイスクリーム</p>
+  <div class="header-line"></div>
+  <p class="header-date" id="updateDate">読み込み中...</p>
+</header>
+
+<div class="content">
+  <div class="stats" id="statsArea"></div>
+  <div class="filters" id="filterArea"></div>
+  <div id="itemsArea"></div>
+</div>
+
+<script>
+const FLAVOR_COLORS = {
+  'バニラ':    { bar: '#F0C850' },
+  '抹茶':      { bar: '#7CB342' },
+  'チョコチップ': { bar: '#A1887F' },
+  'ラムレーズンアイスチーズ': { bar: '#E6A04C' },
+  'ラムレーズン': { bar: '#AB68C8' },
+  '苺':        { bar: '#E8607A' },
+  'ピスタチオ':  { bar: '#66A54A' },
+  '塩バニラ':   { bar: '#7098C0' },
+  'チョコミント': { bar: '#4DB6AC' },
+  'キャラメル':  { bar: '#E6A04C' },
+  'クッキー':   { bar: '#BCAA8C' },
+  'さつまいも':  { bar: '#B06AA8' },
+  'マロン':     { bar: '#A89068' },
+  'パッション':  { bar: '#F09030' },
+  'ラズベリー':  { bar: '#D84890' },
+  'チーズ':     { bar: '#E0C040' },
+};
+
+function getBarColor(name) {
+  const keys = Object.keys(FLAVOR_COLORS).sort((a,b) => b.length - a.length);
+  for (const k of keys) { if (name.includes(k)) return FLAVOR_COLORS[k].bar; }
+  return '#AAA';
+}
+
+let allData = [];
+let currentFilter = 'all';
+
+// ── Load JSON ──
+async function loadData() {
+  try {
+    const res = await fetch('inventory.json?t=' + Date.now());
+    const json = await res.json();
+    allData = json.items || [];
+    document.getElementById('updateDate').textContent = (json.updated || '') + ' 更新';
+    render();
+  } catch (e) {
+    document.getElementById('updateDate').textContent = 'データを読み込めません';
+    document.getElementById('itemsArea').innerHTML = '<div class="msg">inventory.json が見つかりません</div>';
+  }
+}
+
+function render() {
+  const maxStock = Math.max(...allData.map(d => d.stock), 1);
+  const stats = {
+    total: allData.length,
+    available: allData.filter(d => d.stock > 0).length,
+    low: allData.filter(d => d.stock > 0 && d.stock <= 2).length,
+    out: allData.filter(d => d.stock === 0).length,
+    totalStock: allData.reduce((s,d) => s + d.stock, 0),
+  };
+
+  // Stats
+  document.getElementById('statsArea').innerHTML = [
+    { label: '在庫合計', value: stats.totalStock, color: '#1A1A1A' },
+    { label: '残りわずか', value: stats.low, color: '#E86040' },
+    { label: '品切れ', value: stats.out, color: '#ccc' },
+  ].map(s => `
+    <div class="stat-card">
+      <div class="stat-value" style="color:${s.color}">${s.value}</div>
+      <div class="stat-label">${s.label}</div>
+    </div>
+  `).join('');
+
+  // Filters
+  const filters = [
+    { key: 'all', label: 'すべて ' + stats.total },
+    { key: 'available', label: '在庫あり ' + stats.available },
+    { key: 'low', label: '残りわずか ' + stats.low },
+    { key: 'out', label: '品切れ ' + stats.out },
+  ];
+  document.getElementById('filterArea').innerHTML = filters.map(f =>
+    `<button class="ftab ${currentFilter === f.key ? 'on' : ''}" onclick="setFilter('${f.key}')">${f.label}</button>`
+  ).join('');
+
+  // Filter items
+  let items = allData;
+  if (currentFilter === 'available') items = items.filter(d => d.stock > 0);
+  if (currentFilter === 'low') items = items.filter(d => d.stock > 0 && d.stock <= 2);
+  if (currentFilter === 'out') items = items.filter(d => d.stock === 0);
+
+  // Group by container
+  const groups = {};
+  items.forEach(d => {
+    const cat = d.container || 'その他';
+    if (!groups[cat]) groups[cat] = [];
+    groups[cat].push(d);
+  });
+
+  if (Object.keys(groups).length === 0) {
+    document.getElementById('itemsArea').innerHTML = '<div class="empty">該当する商品がありません</div>';
+    return;
+  }
+
+  let html = '';
+  for (const [catName, catItems] of Object.entries(groups)) {
+    html += `<div style="margin-bottom:40px;animation:fadeUp 0.5s ease both">`;
+    html += `<div class="cat-label">【${catName}】</div>`;
+    for (const item of catItems) {
+      const out = item.stock === 0;
+      const barColor = out ? '#e0ddd8' : getBarColor(item.flavor);
+      const isLow = item.stock > 0 && item.stock <= 2;
+      const stockColor = out ? '#ccc' : (isLow ? '#E86040' : barColor);
+      const pct = out ? 0 : Math.max((item.stock / maxStock) * 100, 8);
+      const priceHtml = item.price > 0
+        ? `<div class="item-price" style="color:${out ? '#ccc' : '#1A1A1A'}">¥${item.price.toLocaleString()}<span class="tax">税込</span></div>`
+        : (!out ? '<div class="price-tbd">価格未定</div>' : '');
+
+      const stockHtml = out
+        ? `<div class="stock-row"><div class="stock-track"></div><div class="stock-out-label">品切れ</div></div>`
+        : `<div class="stock-row">
+            <div class="stock-track"><div class="stock-fill" style="width:${pct}%;background:${stockColor}"></div></div>
+            <div class="stock-num" style="color:${stockColor}">${item.stock}</div>
+          </div>`;
+
+      html += `
+        <div class="item-row ${out ? 'out' : ''}">
+          <div class="color-bar" style="background:${barColor}"></div>
+          <div class="item-info">
+            <div class="item-name-row">
+              <div class="item-name ${out ? 'out-text' : ''}">${item.flavor}</div>
+              ${priceHtml}
+            </div>
+            ${stockHtml}
+          </div>
+        </div>`;
+    }
+    html += '</div>';
+  }
+  document.getElementById('itemsArea').innerHTML = html;
+}
+
+function setFilter(key) {
+  currentFilter = key;
+  render();
+}
+
+loadData();
+</script>
+</body>
+</html>
