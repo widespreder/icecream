@@ -1,5 +1,5 @@
 {
-  "updated": "2026.03.23 19:40",
+  "updated": "2026.03.23 19:41",
   "items": [
     { "container": "【業務用アイス2L】", "flavor": "バニラアイス", "price": 3300, "stock": 10 },
     { "container": "【業務用アイス2L】", "flavor": "抹茶アイス", "price": 3300, "stock": 2 },
@@ -10,7 +10,7 @@
     { "container": "【業務用アイス2L】", "flavor": "塩バニラアイス", "price": 3300, "stock": 1 },
     { "container": "【業務用アイス2L】", "flavor": "チョコミントアイス", "price": 3900, "stock": 1 },
     { "container": "【業務用アイス2L】", "flavor": "キャラメルアイス", "price": 3300, "stock": 1 },
-    { "container": "【業務用アイス2L】", "flavor": "クッキーバニラアイス", "price": 100000, "stock": 1 },
+    { "container": "【業務用アイス2L】", "flavor": "クッキーバニラアイス", "price": 0, "stock": 1 },
     { "container": "【業務用アイス2L】", "flavor": "さつまいもアイス", "price": 0, "stock": 1 },
     { "container": "【業務用アイス2L】", "flavor": "マロンアイス", "price": 0, "stock": 1 },
     { "container": "【業務用アイス2L】", "flavor": "パッションオレンジシャーベット", "price": 0, "stock": 1 },
