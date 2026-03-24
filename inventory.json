@@ -16,6 +16,6 @@
     { "container": "【業務用アイス2L】", "flavor": "パッションオレンジシャーベット", "price": 0, "stock": 1, "comment": "成分など13", "image": "" },
     { "container": "【業務用アイス2L】", "flavor": "ラズベリーシャーベット", "price": 0, "stock": 1, "comment": "成分など14", "image": "" },
     { "container": "【業務用アイス2L】", "flavor": "クリームチーズアイス", "price": 0, "stock": 1, "comment": "成分など15", "image": "" },
-    { "container": "【業務用アイス2L】", "flavor": "ラムレーズンアイスチーズアイス", "price": 0, "stock": 0, "comment": "成分など16", "image": "" }
+    { "container": "【業務用アイス2L】", "flavor": "ラムレーズンチーズアイス", "price": 0, "stock": 0, "comment": "成分など16", "image": "" }
   ]
 }
