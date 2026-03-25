@@ -1,11 +1,11 @@
 {
-  "updated": "2026.03.24 14:09",
+  "updated": "2026.03.25 19:30",
   "items": [
-    { "container": "【業務用アイス2L】", "flavor": "バニラアイス", "price": 3300, "stock": 10, "comment": "成分など1", "image": "https://www.nissei-com.co.jp/recipe/images/ph_recipe52.png" },
-    { "container": "【業務用アイス2L】", "flavor": "抹茶アイス", "price": 3300, "stock": 2, "comment": "成分など2", "image": "" },
-    { "container": "【業務用アイス2L】", "flavor": "チョコチップアイス", "price": 4400, "stock": 3, "comment": "成分など3", "image": "" },
+    { "container": "【業務用アイス2L】", "flavor": "バニラアイス", "price": 3300, "stock": 5, "comment": "成分など1", "image": "https://www.nissei-com.co.jp/recipe/images/ph_recipe52.png" },
+    { "container": "【業務用アイス2L】", "flavor": "抹茶アイス", "price": 3300, "stock": 1, "comment": "成分など2", "image": "" },
+    { "container": "【業務用アイス2L】", "flavor": "チョコアイス", "price": 4400, "stock": 5, "comment": "成分など3", "image": "" },
     { "container": "【業務用アイス2L】", "flavor": "ラムレーズンアイス", "price": 3300, "stock": 3, "comment": "成分など4", "image": "" },
-    { "container": "【業務用アイス2L】", "flavor": "苺アイス", "price": 3800, "stock": 3, "comment": "成分など5", "image": "" },
+    { "container": "【業務用アイス2L】", "flavor": "苺アイス", "price": 3800, "stock": 2, "comment": "成分など5", "image": "" },
     { "container": "【業務用アイス2L】", "flavor": "ピスタチオアイス", "price": 5400, "stock": 2, "comment": "成分など6", "image": "" },
     { "container": "【業務用アイス2L】", "flavor": "塩バニラアイス", "price": 3300, "stock": 1, "comment": "成分など7", "image": "" },
     { "container": "【業務用アイス2L】", "flavor": "チョコミントアイス", "price": 3900, "stock": 1, "comment": "成分など8", "image": "" },
