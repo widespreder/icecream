@@ -16,7 +16,6 @@
     overflow-x:hidden;
   }
 
-  /* ── Hero ── */
   .hero{
     display:flex;flex-direction:column;
     align-items:center;justify-content:center;text-align:center;
@@ -40,62 +39,60 @@
     opacity:0;animation:fadeIn .8s ease .6s forwards;
   }
 
-  /* ── Filter (sticky) ── */
   .sec-filter{
     background:rgba(255,255,255,0.85);
     backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-    padding:16px 24px 16px;
-    text-align:center;position:sticky;top:0;z-index:50;
+    padding:12px 12px;text-align:center;position:sticky;top:0;z-index:50;
     border-bottom:1px solid #e8e8ed;
+    overflow-x:auto;-webkit-overflow-scrolling:touch;
   }
-  .filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .filters{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap;min-width:min-content;}
   .fb{
-    padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;
+    padding:6px 12px;border-radius:16px;font-size:11px;font-weight:600;
     border:1px solid #d2d2d7;background:#fff;color:#86868b;
-    cursor:pointer;transition:all .3s;font-family:inherit;white-space:nowrap;
+    cursor:pointer;transition:all .3s;font-family:inherit;white-space:nowrap;flex-shrink:0;
   }
   .fb:hover{border-color:#aaa;color:#1d1d1f;}
   .fb.on{background:#1d1d1f;color:#fff;border-color:#1d1d1f;}
 
-  /* ── Items Section ── */
   .sec-items{max-width:680px;margin:0 auto;padding:48px 20px 80px;}
-
-  /* Category */
   .cat-block{margin-bottom:56px;}
-  .cat-title{
-    font-size:28px;font-weight:800;color:#1d1d1f;
-    text-align:center;margin-bottom:32px;letter-spacing:.04em;
-  }
+  .cat-title{font-size:28px;font-weight:800;color:#1d1d1f;text-align:center;margin-bottom:32px;letter-spacing:.04em;}
 
-  /* Card */
   .card{
     background:#f5f5f7;border-radius:18px;
-    padding:20px 22px;margin-bottom:10px;
-    display:flex;align-items:center;gap:16px;
+    padding:18px 20px;margin-bottom:10px;
+    display:flex;align-items:center;gap:14px;
     cursor:pointer;user-select:none;-webkit-user-select:none;
     transition:all .3s ease;border:1px solid transparent;
   }
   .card:hover{background:#eee;border-color:#e0e0e0;}
   .card:active{transform:scale(0.985);}
-  .card.out{opacity:.35;}
-  .card.out:hover{background:#f5f5f7;border-color:transparent;}
+  .card.out{opacity:.35;}.card.out:hover{background:#f5f5f7;border-color:transparent;}
   .card.nc{cursor:default;}.card.nc:active{transform:none;}
 
-  .c-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .c-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;align-self:flex-start;margin-top:8px;}
   .c-body{flex:1;min-width:0;}
-  .c-top{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
-  .c-name{font-size:17px;font-weight:700;color:#1d1d1f;display:flex;align-items:center;gap:6px;}
+  .c-top{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:6px;}
+  .c-name{font-size:18px;font-weight:700;color:#1d1d1f;display:flex;align-items:center;gap:6px;min-width:0;}
   .c-name.x{color:#b0b0b0;text-decoration:line-through;text-decoration-color:#d2d2d7;}
   .c-info{width:14px;height:14px;flex-shrink:0;color:#0071e3;opacity:.5;}
-  .c-price{font:600 14px/1 'DM Sans',sans-serif;color:#6e6e73;white-space:nowrap;}
-  .c-price .tx{font-size:10px;font-family:'M PLUS 2',sans-serif;margin-left:2px;}
-  .c-tbd{font-size:11px;font-weight:500;color:#b0b0b0;}
+  .c-price{font:700 16px/1 'DM Sans',sans-serif;color:#1d1d1f;white-space:nowrap;flex-shrink:0;text-align:right;}
+  .c-price .tx{font-size:10px;font-weight:500;font-family:'M PLUS 2',sans-serif;margin-left:2px;color:#86868b;}
+  .c-tbd{font-size:12px;font-weight:500;color:#b0b0b0;flex-shrink:0;}
 
-  .s-row{display:flex;align-items:center;gap:12px;}
-  .s-bar{flex:1;height:4px;border-radius:2px;background:#e0e0e0;overflow:hidden;}
-  .s-fill{height:100%;border-radius:2px;transition:width .8s cubic-bezier(.25,.8,.25,1);}
-  .s-val{font:800 22px/1 'DM Sans',sans-serif;min-width:32px;text-align:right;font-variant-numeric:tabular-nums;}
-  .s-out{font-size:11px;font-weight:700;color:#b0b0b0;letter-spacing:.08em;}
+  /* ── Stock display ── */
+  .stock-line{display:flex;align-items:center;gap:8px;margin-top:2px;}
+  .stock-badge{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:4px 10px;border-radius:8px;
+    font-size:14px;font-weight:700;
+  }
+  .stock-badge.ok{background:#e8f5e4;color:#2d7a2d;}
+  .stock-badge.low{background:#fff3e0;color:#d4622b;}
+  .stock-badge.out{background:#f2f2f2;color:#b0b0b0;}
+  .stock-badge .mark{font-size:12px;}
+  .stock-num{font:700 14px/1 'DM Sans',sans-serif;color:#6e6e73;}
 
   /* ── Modal ── */
   .ov{display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;padding:20px;}
@@ -108,10 +105,7 @@
     box-shadow:0 20px 60px rgba(0,0,0,0.12),0 0 0 1px rgba(0,0,0,0.04);
     animation:modalUp .35s cubic-bezier(.2,.8,.2,1) both;
   }
-  .md-img-wrap{
-    width:100%;aspect-ratio:1/1;background:#f5f5f7;
-    display:none;align-items:center;justify-content:center;overflow:hidden;
-  }
+  .md-img-wrap{width:100%;aspect-ratio:1/1;background:#f5f5f7;display:none;align-items:center;justify-content:center;overflow:hidden;}
   .md-img-wrap.has{display:flex;}
   .md-img{width:100%;height:100%;object-fit:cover;}
   .md-body{padding:24px;}
@@ -194,8 +188,17 @@ async function load(){
   }
 }
 
+function stockHtml(stock){
+  if(stock===0){
+    return '<div class="stock-line"><span class="stock-badge out"><span class="mark">✕</span>品切れ</span></div>';
+  }
+  if(stock<=2){
+    return '<div class="stock-line"><span class="stock-badge low"><span class="mark">△</span>残りわずか</span><span class="stock-num">在庫 '+stock+'個</span></div>';
+  }
+  return '<div class="stock-line"><span class="stock-badge ok"><span class="mark">◎</span>在庫あり</span><span class="stock-num">在庫 '+stock+'個</span></div>';
+}
+
 function render(){
-  const mx=Math.max(...allData.map(d=>d.stock),1);
   const s={total:allData.length,avail:allData.filter(d=>d.stock>0).length,low:allData.filter(d=>d.stock>0&&d.stock<=2).length,out:allData.filter(d=>d.stock===0).length};
   document.getElementById('filterArea').innerHTML=[
     {k:'all',l:'すべて '+s.total},{k:'available',l:'在庫あり '+s.avail},
@@ -213,14 +216,16 @@ function render(){
   for(const[cat,list]of Object.entries(g)){
     h+=`<div class="cat-block reveal"><div class="cat-title">${cat}</div>`;
     for(const it of list){
-      const o=it.stock===0,clr=o?'#d2d2d7':gc(it.flavor),lo=it.stock>0&&it.stock<=2,sc=o?'#d2d2d7':(lo?'#ff6b4a':clr),pct=o?0:Math.max((it.stock/mx)*100,6);
+      const o=it.stock===0,clr=o?'#d2d2d7':gc(it.flavor);
       const hc=it.comment&&it.comment.trim(),hi=it.image&&it.image.trim(),hd=hc||hi;
       const price=it.price>0?`<div class="c-price">¥${it.price.toLocaleString()}<span class="tx">税込</span></div>`:(!o?'<div class="c-tbd">価格未定</div>':'');
-      const stock=o?'<div class="s-row"><div class="s-bar"></div><div class="s-out">SOLD OUT</div></div>':`<div class="s-row"><div class="s-bar"><div class="s-fill" style="width:${pct}%;background:${sc}"></div></div><div class="s-val" style="color:${sc}">${it.stock}</div></div>`;
       const click=hd?`onclick="showM('${esc(it.flavor)}',${it.price||0},'${clr}','${esc(it.comment||'')}','${esc(it.image||'')}')"`:''
       h+=`<div class="card ${o?'out':''} ${hd?'':'nc'}" ${click}>
         <div class="c-dot" style="background:${clr}"></div>
-        <div class="c-body"><div class="c-top"><div class="c-name ${o?'x':''}">${it.flavor}${hd?INFO:''}</div>${price}</div>${stock}</div>
+        <div class="c-body">
+          <div class="c-top"><div class="c-name ${o?'x':''}">${it.flavor}${hd?INFO:''}</div>${price}</div>
+          ${stockHtml(it.stock)}
+        </div>
       </div>`;
     }
     h+='</div>';
