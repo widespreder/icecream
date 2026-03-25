@@ -3,156 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>グラスミス アイスクリーム - 在庫一覧</title>
+<title>グラスミス アイスクリーム</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900&display=swap" rel="stylesheet">
 <style>
   *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
   body{
-    font-family:'M PLUS 2','Noto Sans JP','Hiragino Sans',sans-serif;
-    background:#F0F2F6;color:#1A2030;min-height:100vh;
+    font-family:'M PLUS 2','Hiragino Sans',sans-serif;
+    background:#fff;color:#1d1d1f;
     -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+    overflow-x:hidden;
   }
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-  @keyframes modalIn{from{opacity:0;transform:scale(0.94) translateY(12px)}to{opacity:1;transform:scale(1) translateY(0)}}
-  @keyframes overlayIn{from{opacity:0}to{opacity:1}}
 
-  .header{padding:52px 24px 44px;text-align:center;background:linear-gradient(180deg,#F6F8FC 0%,#F0F2F6 100%);border-bottom:1px solid rgba(0,0,0,0.04);}
-  .h-tag{font:600 10px/1 'DM Sans',sans-serif;letter-spacing:0.3em;color:#3D8EBF;text-transform:uppercase;margin-bottom:14px;}
-  .h-title{font-size:30px;font-weight:900;letter-spacing:0.08em;color:#1A2030;margin-bottom:2px;}
-  .h-sub{font-size:12px;font-weight:500;letter-spacing:0.22em;color:#8A92A4;margin-bottom:22px;}
-  .h-line{width:36px;height:2px;background:linear-gradient(90deg,#3D8EBF,#28B8A0);margin:0 auto 16px;border-radius:1px;}
-  .h-date{font-size:10px;color:#A0A8B8;letter-spacing:0.06em;}
-  .content{max-width:600px;margin:0 auto;padding:28px 18px 80px;}
+  /* ── Hero ── */
+  .hero{
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;text-align:center;
+    padding:40px 24px 32px;
+    background:linear-gradient(180deg,#fbfbfd 0%,#f5f5f7 100%);
+  }
+  .hero-tag{
+    font:500 11px/1 'DM Sans',sans-serif;letter-spacing:0.25em;
+    color:#0071e3;text-transform:uppercase;margin-bottom:10px;
+    opacity:0;animation:fadeIn .8s ease .2s forwards;
+  }
+  .hero-title{
+    font-size:clamp(32px,7vw,48px);font-weight:900;
+    letter-spacing:0.04em;color:#1d1d1f;
+    line-height:1.1;margin-bottom:4px;
+    opacity:0;animation:fadeIn .8s ease .4s forwards;
+  }
+  .hero-sub{
+    font-size:clamp(13px,2.5vw,17px);font-weight:400;
+    letter-spacing:0.14em;color:#86868b;
+    opacity:0;animation:fadeIn .8s ease .6s forwards;
+  }
 
-  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:26px;}
-  .st{background:#fff;border-radius:14px;padding:18px 12px;text-align:center;border:1px solid #E4E8F0;box-shadow:0 2px 8px rgba(0,0,0,0.03);animation:fadeUp 0.5s ease both;}
-  .st:nth-child(1){animation-delay:.1s}.st:nth-child(2){animation-delay:.15s}.st:nth-child(3){animation-delay:.2s}
-  .st-v{font:800 28px/1 'DM Sans',sans-serif;font-variant-numeric:tabular-nums;}
-  .st-l{font-size:10px;font-weight:700;color:#8A92A4;margin-top:6px;letter-spacing:0.06em;}
+  /* ── Filter (sticky) ── */
+  .sec-filter{
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    padding:16px 24px 16px;
+    text-align:center;position:sticky;top:0;z-index:50;
+    border-bottom:1px solid #e8e8ed;
+  }
+  .filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .fb{
+    padding:8px 20px;border-radius:20px;font-size:12px;font-weight:600;
+    border:1px solid #d2d2d7;background:#fff;color:#86868b;
+    cursor:pointer;transition:all .3s;font-family:inherit;white-space:nowrap;
+  }
+  .fb:hover{border-color:#aaa;color:#1d1d1f;}
+  .fb.on{background:#1d1d1f;color:#fff;border-color:#1d1d1f;}
 
-  .filters{display:flex;gap:8px;margin-bottom:30px;flex-wrap:wrap;justify-content:center;animation:fadeUp .5s ease .2s both;}
-  .fb{padding:8px 18px;border-radius:20px;font-size:11px;font-weight:700;border:1.5px solid #DDE0E8;background:#fff;color:#8A92A4;cursor:pointer;transition:all .25s;font-family:inherit;white-space:nowrap;}
-  .fb:hover{border-color:#B0B8C8;color:#5A6478;}
-  .fb.on{background:linear-gradient(135deg,#3D8EBF,#28B8A0);color:#fff;border-color:transparent;font-weight:800;box-shadow:0 3px 12px rgba(61,142,191,0.25);}
+  /* ── Items Section ── */
+  .sec-items{max-width:680px;margin:0 auto;padding:48px 20px 80px;}
 
-  .cat{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
-  .cat-l{flex:1;height:1px;background:linear-gradient(90deg,transparent,#D8DCE6);}
-  .cat-lr{background:linear-gradient(90deg,#D8DCE6,transparent);}
-  .cat-t{font-size:10px;font-weight:800;letter-spacing:0.18em;color:#A0A8B8;white-space:nowrap;text-transform:uppercase;}
+  /* Category */
+  .cat-block{margin-bottom:56px;}
+  .cat-title{
+    font-size:28px;font-weight:800;color:#1d1d1f;
+    text-align:center;margin-bottom:32px;letter-spacing:.04em;
+  }
 
-  .card{background:#fff;border-radius:12px;padding:15px 16px;border:1px solid #E4E8F0;margin-bottom:6px;display:flex;align-items:center;gap:12px;transition:all .25s ease;cursor:pointer;user-select:none;-webkit-user-select:none;box-shadow:0 1px 4px rgba(0,0,0,0.02);}
-  .card:hover{box-shadow:0 6px 20px rgba(0,0,0,0.06);border-color:#D0D4E0;}
-  .card:active{transform:scale(0.99);}
-  .card.out{opacity:.4;}.card.out:hover{box-shadow:0 1px 4px rgba(0,0,0,0.02);border-color:#E4E8F0;}
-  .card.nc{cursor:default;}
-  .cb{width:3px;border-radius:2px;flex-shrink:0;align-self:stretch;min-height:40px;}
-  .ci{flex:1;min-width:0;}
-  .cn-row{display:flex;align-items:baseline;gap:8px;margin-bottom:6px;flex-wrap:wrap;}
-  .cn{font-size:14px;font-weight:700;color:#1A2030;display:flex;align-items:center;gap:5px;}
-  .cn.x{color:#B0B8C8;text-decoration:line-through;text-decoration-color:#D0D4E0;}
-  .tap-hint{width:12px;height:12px;flex-shrink:0;color:#3D8EBF;opacity:.4;transition:opacity .2s;}
-  .card:hover .tap-hint{opacity:.7;}
-  .cp{font:700 12px/1 'DM Sans',sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap;color:#5A6478;}
-  .cp .tx{font-size:9px;font-weight:600;color:#8A92A4;margin-left:2px;font-family:'M PLUS 2',sans-serif;}
-  .ctd{font-size:10px;font-weight:600;color:#C0C8D4;}
+  /* Card */
+  .card{
+    background:#f5f5f7;border-radius:18px;
+    padding:20px 22px;margin-bottom:10px;
+    display:flex;align-items:center;gap:16px;
+    cursor:pointer;user-select:none;-webkit-user-select:none;
+    transition:all .3s ease;border:1px solid transparent;
+  }
+  .card:hover{background:#eee;border-color:#e0e0e0;}
+  .card:active{transform:scale(0.985);}
+  .card.out{opacity:.35;}
+  .card.out:hover{background:#f5f5f7;border-color:transparent;}
+  .card.nc{cursor:default;}.card.nc:active{transform:none;}
 
-  .sr{display:flex;align-items:center;gap:10px;}
-  .s-track{flex:1;height:5px;border-radius:3px;background:#EEF0F4;overflow:hidden;}
-  .s-fill{height:100%;border-radius:3px;transition:width .8s cubic-bezier(.25,.8,.25,1);}
-  .s-num{font:900 20px/1 'DM Sans',sans-serif;min-width:30px;text-align:right;font-variant-numeric:tabular-nums;}
-  .s-out{font-size:10px;font-weight:800;color:#C0C8D4;letter-spacing:.1em;}
+  .c-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .c-body{flex:1;min-width:0;}
+  .c-top{display:flex;align-items:baseline;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+  .c-name{font-size:17px;font-weight:700;color:#1d1d1f;display:flex;align-items:center;gap:6px;}
+  .c-name.x{color:#b0b0b0;text-decoration:line-through;text-decoration-color:#d2d2d7;}
+  .c-info{width:14px;height:14px;flex-shrink:0;color:#0071e3;opacity:.5;}
+  .c-price{font:600 14px/1 'DM Sans',sans-serif;color:#6e6e73;white-space:nowrap;}
+  .c-price .tx{font-size:10px;font-family:'M PLUS 2',sans-serif;margin-left:2px;}
+  .c-tbd{font-size:11px;font-weight:500;color:#b0b0b0;}
+
+  .s-row{display:flex;align-items:center;gap:12px;}
+  .s-bar{flex:1;height:4px;border-radius:2px;background:#e0e0e0;overflow:hidden;}
+  .s-fill{height:100%;border-radius:2px;transition:width .8s cubic-bezier(.25,.8,.25,1);}
+  .s-val{font:800 22px/1 'DM Sans',sans-serif;min-width:32px;text-align:right;font-variant-numeric:tabular-nums;}
+  .s-out{font-size:11px;font-weight:700;color:#b0b0b0;letter-spacing:.08em;}
 
   /* ── Modal ── */
-  .ov{display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;padding:24px;}
-  .ov.show{display:flex;animation:overlayIn .25s ease both;}
-  .ov-bg{position:absolute;inset:0;background:rgba(20,28,40,0.35);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);}
+  .ov{display:none;position:fixed;inset:0;z-index:1000;align-items:center;justify-content:center;padding:20px;}
+  .ov.show{display:flex;animation:fadeIn .2s ease both;}
+  .ov-bg{position:absolute;inset:0;background:rgba(0,0,0,0.25);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);}
   .md{
-    position:relative;z-index:1;background:#fff;border:1px solid #E4E8F0;
+    position:relative;z-index:1;background:#fff;
     border-radius:20px;overflow:hidden;
-    max-width:400px;width:100%;
-    box-shadow:0 24px 80px rgba(0,0,0,0.12),0 0 0 1px rgba(0,0,0,0.03);
-    animation:modalIn .3s cubic-bezier(.2,.8,.2,1) both;
+    max-width:420px;width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,0.12),0 0 0 1px rgba(0,0,0,0.04);
+    animation:modalUp .35s cubic-bezier(.2,.8,.2,1) both;
   }
-  /* Image area */
   .md-img-wrap{
-    width:100%;aspect-ratio:4/3;background:#EEF0F4;
+    width:100%;aspect-ratio:1/1;background:#f5f5f7;
     display:none;align-items:center;justify-content:center;overflow:hidden;
-    position:relative;
   }
-  .md-img-wrap.has-img{display:flex;}
+  .md-img-wrap.has{display:flex;}
   .md-img{width:100%;height:100%;object-fit:cover;}
-  .md-img-placeholder{color:#C0C8D4;font-size:11px;font-weight:600;}
-
-  .md-body{padding:24px 24px 20px;}
-  .md-bar{width:28px;height:3px;border-radius:2px;margin:0 0 14px;}
-  .md-name{font-size:18px;font-weight:800;color:#1A2030;margin-bottom:4px;}
-  .md-price{font:700 14px/1 'DM Sans',sans-serif;color:#3D8EBF;margin-bottom:16px;}
-  .md-price .tx{font-size:10px;color:#6AAED0;font-family:'M PLUS 2',sans-serif;}
-  .md-div{height:1px;background:#EEF0F4;margin-bottom:16px;}
-  .md-comment{font-size:13px;font-weight:500;color:#5A6478;line-height:1.8;white-space:pre-wrap;}
+  .md-body{padding:24px;}
+  .md-dot{width:8px;height:8px;border-radius:50%;margin-bottom:14px;}
+  .md-name{font-size:22px;font-weight:800;color:#1d1d1f;margin-bottom:4px;}
+  .md-price{font:700 16px/1 'DM Sans',sans-serif;color:#0071e3;margin-bottom:20px;}
+  .md-price .tx{font-size:11px;color:#4da3ff;font-family:'M PLUS 2',sans-serif;}
+  .md-div{height:1px;background:#e8e8ed;margin-bottom:16px;}
+  .md-comment{font-size:14px;font-weight:400;color:#6e6e73;line-height:1.8;white-space:pre-wrap;}
   .md-close{
-    margin-top:20px;width:100%;padding:12px;border-radius:10px;
-    background:#F4F6FA;border:1px solid #E4E8F0;
-    color:#8A92A4;font-size:12px;font-weight:700;font-family:inherit;
-    cursor:pointer;transition:all .2s;letter-spacing:.04em;
+    margin-top:24px;width:100%;padding:14px;border-radius:12px;
+    background:#f5f5f7;border:none;
+    color:#86868b;font-size:14px;font-weight:600;font-family:inherit;
+    cursor:pointer;transition:all .2s;
   }
-  .md-close:hover{background:#EAEdf4;color:#5A6478;}
+  .md-close:hover{background:#e8e8ed;color:#1d1d1f;}
 
-  .empty{text-align:center;padding:60px 0;color:#B0B8C8;font-size:13px;font-weight:700;}
-  .footer{text-align:center;padding:28px 20px 20px;font-size:9px;color:#B0B8C8;letter-spacing:.06em;border-top:1px solid #E4E8F0;max-width:600px;margin:0 auto;}
-  .loading{text-align:center;padding:48px;color:#A0A8B8;font-size:13px;}
-  .loading::after{content:'';display:inline-block;width:14px;height:14px;border:2px solid #D8DCE6;border-top-color:#3D8EBF;border-radius:50%;animation:spin .6s linear infinite;margin-left:8px;vertical-align:middle;}
-  @keyframes spin{to{transform:rotate(360deg)}}
+  .footer{text-align:center;padding:40px 20px 32px;font-size:11px;color:#b0b0b0;letter-spacing:.04em;border-top:1px solid #e8e8ed;max-width:680px;margin:0 auto;}
+  .empty{text-align:center;padding:80px 0;color:#b0b0b0;font-size:14px;font-weight:600;}
+
+  @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes modalUp{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.visible{opacity:1;transform:translateY(0);}
 </style>
 </head>
 <body>
 
-<header class="header">
-  <p class="h-tag">I love IceCream</p>
-  <h1 class="h-title">グラスミス</h1>
-  <p class="h-sub">アイスクリーム</p>
-  <div class="h-line"></div>
-  <p class="h-date" id="updateDate">読み込み中...</p>
-</header>
+<section class="hero">
+  <p class="hero-tag">I love IceCream</p>
+  <h1 class="hero-title">グラスミス</h1>
+  <p class="hero-sub">アイスクリーム</p>
+</section>
 
-<div class="content">
-  <div class="stats" id="statsArea"></div>
+<nav class="sec-filter">
   <div class="filters" id="filterArea"></div>
-  <div id="itemsArea"><div class="loading">在庫データを読み込み中</div></div>
-</div>
+</nav>
+
+<div class="sec-items" id="itemsArea"></div>
 <div class="footer" id="footer" style="display:none">© グラスミス アイスクリーム</div>
 
-<!-- Modal -->
 <div class="ov" id="overlay" onclick="closeM(event)">
   <div class="ov-bg"></div>
   <div class="md" id="modal">
-    <div class="md-img-wrap" id="mImgWrap">
-      <img class="md-img" id="mImg" src="" alt="">
-    </div>
+    <div class="md-img-wrap" id="mImgW"><img class="md-img" id="mImg" src="" alt=""></div>
     <div class="md-body">
-      <div class="md-bar" id="mBar"></div>
+      <div class="md-dot" id="mDot"></div>
       <div class="md-name" id="mName"></div>
       <div class="md-price" id="mPrice"></div>
-      <div class="md-div"></div>
-      <div class="md-comment" id="mComment"></div>
+      <div class="md-div" id="mDiv"></div>
+      <div class="md-comment" id="mCmt"></div>
       <button class="md-close" onclick="hideM()">閉じる</button>
     </div>
   </div>
 </div>
 
 <script>
-const COLORS={
+const C={
   'バニラ':'#D4A840','抹茶':'#5C9A40','チョコチップ':'#8A7060',
   'ラムレーズンアイスチーズ':'#B88040','ラムレーズン':'#8060A0',
-  '苺':'#C04860','ピスタチオ':'#4C8A40','塩バニラ':'#5878A0',
+  '苺':'#E0506A','ピスタチオ':'#4C8A40','塩バニラ':'#5878A0',
   'チョコミント':'#3A9088','キャラメル':'#B88040','クッキー':'#9A8A70',
-  'さつまいも':'#905088','マロン':'#887050','パッション':'#C07020',
-  'ラズベリー':'#A83878','チーズ':'#B8A030',
+  'さつまいも':'#905088','マロン':'#887050','パッション':'#D07828',
+  'ラズベリー':'#B83878','チーズ':'#C0A830',
 };
-function gc(n){const k=Object.keys(COLORS).sort((a,b)=>b.length-a.length);for(const c of k)if(n.includes(c))return COLORS[c];return'#8A92A4';}
-
-const IC='<svg class="tap-hint" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
+function gc(n){const k=Object.keys(C).sort((a,b)=>b.length-a.length);for(const c of k)if(n.includes(c))return C[c];return'#86868b';}
+const INFO='<svg class="c-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
 
 let allData=[],filter='all';
 
@@ -161,23 +187,16 @@ async function load(){
     const r=await fetch('inventory.json?t='+Date.now());
     const j=await r.json();
     allData=j.items||[];
-    document.getElementById('updateDate').textContent=(j.updated||'')+' 更新';
     document.getElementById('footer').style.display='block';
-    render();
+    render();observe();
   }catch(e){
-    document.getElementById('updateDate').textContent='';
     document.getElementById('itemsArea').innerHTML='<div class="empty">inventory.json が見つかりません</div>';
   }
 }
 
 function render(){
   const mx=Math.max(...allData.map(d=>d.stock),1);
-  const s={total:allData.length,avail:allData.filter(d=>d.stock>0).length,low:allData.filter(d=>d.stock>0&&d.stock<=2).length,out:allData.filter(d=>d.stock===0).length,sum:allData.reduce((a,d)=>a+d.stock,0)};
-
-  document.getElementById('statsArea').innerHTML=[
-    {l:'在庫合計',v:s.sum,c:'#1A2030'},{l:'残りわずか',v:s.low,c:'#E07040'},{l:'品切れ',v:s.out,c:'#C0C8D4'},
-  ].map(x=>`<div class="st"><div class="st-v" style="color:${x.c}">${x.v}</div><div class="st-l">${x.l}</div></div>`).join('');
-
+  const s={total:allData.length,avail:allData.filter(d=>d.stock>0).length,low:allData.filter(d=>d.stock>0&&d.stock<=2).length,out:allData.filter(d=>d.stock===0).length};
   document.getElementById('filterArea').innerHTML=[
     {k:'all',l:'すべて '+s.total},{k:'available',l:'在庫あり '+s.avail},
     {k:'low',l:'残りわずか '+s.low},{k:'out',l:'品切れ '+s.out},
@@ -190,59 +209,49 @@ function render(){
   const g={};items.forEach(d=>{const c=d.container||'その他';if(!g[c])g[c]=[];g[c].push(d);});
   if(!Object.keys(g).length){document.getElementById('itemsArea').innerHTML='<div class="empty">該当する商品がありません</div>';return;}
 
-  let h='',idx=0;
+  let h='';
   for(const[cat,list]of Object.entries(g)){
-    h+=`<div style="margin-bottom:40px"><div class="cat"><div class="cat-lr cat-l"></div><div class="cat-t">${cat}</div><div class="cat-l"></div></div>`;
+    h+=`<div class="cat-block reveal"><div class="cat-title">${cat}</div>`;
     for(const it of list){
-      const o=it.stock===0,clr=o?'#D0D4E0':gc(it.flavor),lo=it.stock>0&&it.stock<=2,sc=o?'#D0D4E0':(lo?'#E07040':clr),pct=o?0:Math.max((it.stock/mx)*100,8),dl=(0.12+idx*0.025).toFixed(2);
-      const hc=it.comment&&it.comment.trim();
-      const hi=it.image&&it.image.trim();
-      const hasDetail=hc||hi;
-      const price=it.price>0?`<div class="cp" style="color:${o?'#C0C8D4':'#5A6478'}">¥${it.price.toLocaleString()}<span class="tx">税込</span></div>`:(!o?'<div class="ctd">価格未定</div>':'');
-      const stock=o?'<div class="sr"><div class="s-track"></div><div class="s-out">品切れ</div></div>':`<div class="sr"><div class="s-track"><div class="s-fill" style="width:${pct}%;background:${sc}"></div></div><div class="s-num" style="color:${sc}">${it.stock}</div></div>`;
-      const ca=hasDetail?`onclick="showM('${esc(it.flavor)}',${it.price||0},'${clr}','${esc(it.comment||'')}','${esc(it.image||'')}')"`:''
-      h+=`<div class="card ${o?'out':''} ${hasDetail?'':'nc'}" style="animation:fadeUp .4s ease ${dl}s both" ${ca}>
-        <div class="cb" style="background:${clr}"></div>
-        <div class="ci"><div class="cn-row"><div class="cn ${o?'x':''}">${it.flavor} ${hasDetail?IC:''}</div>${price}</div>${stock}</div>
+      const o=it.stock===0,clr=o?'#d2d2d7':gc(it.flavor),lo=it.stock>0&&it.stock<=2,sc=o?'#d2d2d7':(lo?'#ff6b4a':clr),pct=o?0:Math.max((it.stock/mx)*100,6);
+      const hc=it.comment&&it.comment.trim(),hi=it.image&&it.image.trim(),hd=hc||hi;
+      const price=it.price>0?`<div class="c-price">¥${it.price.toLocaleString()}<span class="tx">税込</span></div>`:(!o?'<div class="c-tbd">価格未定</div>':'');
+      const stock=o?'<div class="s-row"><div class="s-bar"></div><div class="s-out">SOLD OUT</div></div>':`<div class="s-row"><div class="s-bar"><div class="s-fill" style="width:${pct}%;background:${sc}"></div></div><div class="s-val" style="color:${sc}">${it.stock}</div></div>`;
+      const click=hd?`onclick="showM('${esc(it.flavor)}',${it.price||0},'${clr}','${esc(it.comment||'')}','${esc(it.image||'')}')"`:''
+      h+=`<div class="card ${o?'out':''} ${hd?'':'nc'}" ${click}>
+        <div class="c-dot" style="background:${clr}"></div>
+        <div class="c-body"><div class="c-top"><div class="c-name ${o?'x':''}">${it.flavor}${hd?INFO:''}</div>${price}</div>${stock}</div>
       </div>`;
-      idx++;
     }
     h+='</div>';
   }
   document.getElementById('itemsArea').innerHTML=h;
+  observe();
+}
+
+function observe(){
+  const els=document.querySelectorAll('.reveal');
+  const io=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});
+  },{threshold:0.15});
+  els.forEach(el=>io.observe(el));
 }
 
 function showM(name,price,color,comment,image){
-  const wrap=document.getElementById('mImgWrap');
-  const img=document.getElementById('mImg');
-  if(image){
-    img.src=image;
-    img.alt=name;
-    wrap.classList.add('has-img');
-  }else{
-    img.src='';
-    wrap.classList.remove('has-img');
-  }
-  document.getElementById('mBar').style.background=color;
+  const w=document.getElementById('mImgW'),img=document.getElementById('mImg');
+  if(image){img.src=image;img.alt=name;w.classList.add('has');}else{img.src='';w.classList.remove('has');}
+  document.getElementById('mDot').style.background=color;
   document.getElementById('mName').textContent=name;
   const mp=document.getElementById('mPrice');
   if(price>0){mp.innerHTML='¥'+price.toLocaleString()+'<span class="tx"> 税込</span>';mp.style.display='block';}else{mp.style.display='none';}
-  const cm=document.getElementById('mComment');
-  if(comment){
-    cm.innerHTML=comment.replace(/\\n/g,'<br>').replace(/\n/g,'<br>');
-    cm.style.display='block';
-    cm.previousElementSibling.style.display='block';
-  }else{
-    cm.style.display='none';
-    cm.previousElementSibling.style.display='none';
-  }
+  const cm=document.getElementById('mCmt'),dv=document.getElementById('mDiv');
+  if(comment){cm.innerHTML=comment.replace(/\\n/g,'<br>').replace(/\n/g,'<br>');cm.style.display='block';dv.style.display='block';}else{cm.style.display='none';dv.style.display='none';}
   document.getElementById('overlay').classList.add('show');
   document.body.style.overflow='hidden';
 }
 function hideM(){document.getElementById('overlay').classList.remove('show');document.body.style.overflow='';}
 function closeM(e){if(e.target===document.getElementById('overlay')||e.target.classList.contains('ov-bg'))hideM();}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')hideM();});
-
 function esc(s){return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n');}
 function setF(k){filter=k;render();}
 load();
