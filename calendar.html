@@ -2,145 +2,439 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>カレンダー</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <title>営業カレンダー | glacemyth Ice Cream</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300&family=Noto+Sans+JP:wght@300;400&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --bg: #f5f5f5;
-      --surface: #ffffff;
-      --border: #e0e0e0;
-      --border-dark: #111111;
-      --text: #111111;
-      --text-dim: #888888;
-    }
-
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --ink:        #111111;
+      --ink-mid:    #555555;
+      --ink-light:  #aaaaaa;
+      --paper:      #f6f5f2;
+      --paper-warm: #eeece8;
+      --rule:       #d8d6d2;
+      --closed-bg:  #e4e2de;
+      --white:      #ffffff;
+      --font-serif: 'Cormorant Garamond', 'Hiragino Mincho ProN', serif;
+      --font-sans:  'Noto Sans JP', 'Hiragino Sans', sans-serif;
+      /* タップターゲット最小44px */
+      --tap-min:    44px;
+    }
+
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+
     body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Noto Sans JP', sans-serif;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-weight: 300;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 56px 24px 72px;
-      overflow-x: hidden;
+      /* iOS Safe Area 対応 */
+      padding-bottom: env(safe-area-inset-bottom, 32px);
+      -webkit-tap-highlight-color: transparent;
     }
 
-    .wrapper {
-      width: 100%;
-      max-width: 860px;
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-      animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── Header ── */
+    /* ── ヘッダー ── */
     header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      border-bottom: 2px solid var(--border-dark);
-      padding-bottom: 20px;
-      gap: 16px;
-    }
-
-    .header-left {
+      border-bottom: 1px solid var(--ink);
+      padding: 28px 20px 18px;
       display: flex;
       flex-direction: column;
       gap: 6px;
     }
 
-    h1 {
-      font-weight: 700;
-      font-size: 20px;
-      letter-spacing: 0.08em;
-      line-height: 1.3;
-      color: var(--text);
-      text-transform: uppercase;
-    }
-
-    .subtitle {
-      font-size: 16px;
-      font-weight: 400;
-      color: var(--text-dim);
-      letter-spacing: 0.03em;
-    }
-
-    .date-badge {
-      font-family: 'Noto Sans JP', sans-serif;
-      font-size: 13px;
+    .shop-name {
+      font-family: var(--font-serif);
+      font-size: 1.7rem;
       font-weight: 300;
-      color: var(--text-dim);
       letter-spacing: 0.06em;
-      text-align: right;
-      white-space: nowrap;
-      border: 1px solid var(--border);
-      padding: 6px 16px;
-      border-radius: 2px;
+      line-height: 1.1;
     }
 
-    /* ── Calendar card ── */
-    .cal-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 2px;
+    .header-meta {
+      font-size: 0.68rem;
+      color: var(--ink-light);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── 当月・翌月タブ ── */
+    .month-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      margin: 20px 20px 0;
+      border: 1px solid var(--rule);
+      border-radius: 6px;
       overflow: hidden;
     }
 
-    .cal-card iframe {
-      display: block;
-      width: 100%;
-      height: 600px;
+    .tab-btn {
+      background: none;
       border: none;
-      filter: grayscale(100%) contrast(1.2) brightness(0.95);
+      color: var(--ink-mid);
+      font-family: var(--font-sans);
+      font-weight: 300;
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      min-height: var(--tap-min);
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+      -webkit-appearance: none;
     }
 
-    /* ── Responsive ── */
-    @media (max-width: 600px) {
-      header { flex-direction: column; align-items: flex-start; }
-      .date-badge { text-align: left; }
-      .cal-card iframe { height: 480px; }
+    .tab-btn:first-child {
+      border-right: 1px solid var(--rule);
+    }
+
+    .tab-btn.active {
+      background: var(--ink);
+      color: #fff;
+    }
+
+    .tab-btn:not(.active):active {
+      background: var(--paper-warm);
+    }
+
+    /* ── 凡例 ── */
+    .legend {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 14px 20px 0;
+      justify-content: flex-end;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--ink-mid);
+    }
+
+    .legend-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-dot.open   { background: var(--ink); }
+    .legend-dot.closed { background: var(--closed-bg); border: 1px solid var(--rule); }
+
+    /* ── 月見出し ── */
+    .month-heading {
+      font-family: var(--font-serif);
+      font-size: 1.15rem;
+      font-weight: 300;
+      letter-spacing: 0.14em;
+      text-align: center;
+      padding: 16px 0 10px;
+      color: var(--ink);
+    }
+
+    /* ── カレンダーラッパー ── */
+    .calendar-wrap {
+      padding: 0 12px;
+      /* 横スクロールさせない */
+      overflow-x: hidden;
+    }
+
+    /* ── テーブル（モバイルファースト） ── */
+    table.calendar {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed; /* 列幅均等 */
+    }
+
+    table.calendar thead th {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--ink-mid);
+      text-align: center;
+      padding: 0 0 8px;
+      border-bottom: 1px solid var(--ink);
+    }
+    table.calendar thead th.sun { color: var(--ink); }
+
+    table.calendar tbody td {
+      vertical-align: top;
+      border: 1px solid var(--rule);
+      /* 正方形に近いセル：vwベースで高さを確保 */
+      height: calc((100vw - 24px) / 7 * 1.45);
+      padding: 5px 3px 4px;
+      position: relative;
+    }
+
+    table.calendar tbody td.empty      { background: var(--paper); }
+    table.calendar tbody td.open-day   { background: var(--white); }
+    table.calendar tbody td.closed-day { background: var(--closed-bg); }
+
+    /* 今日マーカー */
+    table.calendar tbody td.today .date-num {
+      position: relative;
+    }
+    table.calendar tbody td.today .date-num::after {
+      content: '';
+      display: block;
+      width: 3px; height: 3px;
+      background: var(--ink);
+      border-radius: 50%;
+      margin: 2px auto 0;
+    }
+
+    .date-num {
+      font-family: var(--font-serif);
+      font-size: clamp(0.85rem, 3.5vw, 1.05rem);
+      font-weight: 300;
+      text-align: center;
+      line-height: 1;
+      margin-bottom: 3px;
+    }
+
+    td.sat .date-num { color: var(--ink-mid); }
+    td.sun .date-num { color: var(--ink); font-weight: 400; }
+
+    .cell-status {
+      text-align: center;
+      font-size: clamp(0.5rem, 2vw, 0.6rem);
+      letter-spacing: 0.02em;
+      line-height: 1.3;
+      margin-top: 1px;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+    }
+
+    .status-open {
+      color: var(--ink-mid);
+    }
+
+    .status-closed {
+      color: var(--ink-light);
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(0.58rem, 2.2vw, 0.7rem);
+    }
+
+    /* ── フッター ── */
+    .footer-info {
+      padding: 16px 20px 0;
+      text-align: right;
+      font-size: 0.65rem;
+      color: var(--ink-light);
+      letter-spacing: 0.06em;
+    }
+
+    .loading-msg {
+      text-align: center;
+      padding: 60px 20px;
+      font-family: var(--font-serif);
+      font-size: 1rem;
+      color: var(--ink-mid);
+      letter-spacing: 0.1em;
+    }
+
+    .error-msg {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 0.78rem;
+      color: var(--ink-light);
+      line-height: 1.8;
+    }
+
+    /* ── アニメーション ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .calendar-wrap > * { animation: fadeIn 0.28s ease both; }
+
+    /* ── デスクトップ補正（768px以上） ── */
+    @media (min-width: 768px) {
+      header { padding: 36px 40px 22px; flex-direction: row; align-items: flex-end; justify-content: space-between; }
+      .shop-name { font-size: 2rem; }
+      .month-tabs { margin: 24px 40px 0; border-radius: 4px; }
+      .legend { padding: 18px 40px 0; }
+      .calendar-wrap { padding: 0 40px; }
+      .footer-info { padding: 20px 40px 0; }
+
+      table.calendar tbody td {
+        height: auto;
+        padding: 10px 10px 14px;
+      }
+      .date-num    { font-size: 1.1rem; margin-bottom: 6px; }
+      .cell-status { font-size: 0.62rem; }
+      .status-closed { font-size: 0.72rem; }
     }
   </style>
 </head>
 <body>
-  <div class="wrapper">
-    <header>
-      <div class="header-left">
-        <h1>Business Hours</h1>
-        <p class="subtitle">Mon – Fri: 10:00 AM – 6:00 PM</p>
-        <p class="subtitle">Sat, Sun &amp; Holidays: Closed</p>
-      </div>
-      <div class="date-badge" id="currentDate"></div>
-    </header>
 
-    <div class="cal-card">
-      <iframe
-        src="https://calendar.google.com/calendar/embed?src=toshin.aice%40gmail.com&ctz=Asia%2FTokyo&showTitle=0&showTz=0&showCalendars=0&showPrint=0"
-        scrolling="no"
-        title="Google カレンダー"
-      ></iframe>
-    </div>
+  <header>
+    <div class="shop-name">glacemyth Ice Cream</div>
+    <div class="header-meta" id="headerMeta">読み込み中…</div>
+  </header>
 
-
+  <div class="month-tabs">
+    <button class="tab-btn active" id="tabThis" onclick="switchTab(0)">当月</button>
+    <button class="tab-btn"        id="tabNext" onclick="switchTab(1)">翌月</button>
   </div>
 
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot open"></div>open</div>
+    <div class="legend-item"><div class="legend-dot closed"></div>closed</div>
+  </div>
+
+  <div class="calendar-wrap" id="calendarWrap">
+    <div class="loading-msg">読み込み中…</div>
+  </div>
+
+  <div class="footer-info" id="footerInfo"></div>
+
   <script>
-    // live date badge
-    const el = document.getElementById('currentDate');
-    const now = new Date();
-    const opts = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'short', timeZone: 'Asia/Tokyo' };
-    el.textContent = now.toLocaleDateString('ja-JP', opts);
+    const DATA_URL  = './calendar_data.json';
+    const DAY_NAMES = ['日','月','火','水','木','金','土'];
+
+    let allData = null;
+    let offset  = 0;
+
+    function getYM(off) {
+      const now = new Date();
+      let y = now.getFullYear();
+      let m = now.getMonth() + 1 + off;
+      if (m > 12) { m -= 12; y += 1; }
+      return { year: y, month: m };
+    }
+
+    async function loadData() {
+      try {
+        const res = await fetch(DATA_URL + '?_=' + Date.now());
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        allData = await res.json();
+        document.getElementById('headerMeta').textContent =
+          'データ更新日: ' + allData.shop.updated;
+        render();
+      } catch (e) {
+        document.getElementById('calendarWrap').innerHTML =
+          '<div class="error-msg">データの読み込みに失敗しました。<br>しばらくしてから再度お試しください。</div>';
+      }
+    }
+
+    function switchTab(off) {
+      offset = off;
+      document.getElementById('tabThis').classList.toggle('active', off === 0);
+      document.getElementById('tabNext').classList.toggle('active', off === 1);
+      render();
+    }
+
+    function render() {
+      const ym        = getYM(offset);
+      const monthData = (allData?.months || []).find(
+        m => m.year === ym.year && m.month === ym.month
+      );
+      const dayMap = {};
+      if (monthData) for (const d of monthData.days) dayMap[d.date] = d;
+
+      const firstDay = new Date(ym.year, ym.month - 1, 1).getDay();
+      const lastDate = new Date(ym.year, ym.month, 0).getDate();
+      const today    = new Date();
+
+      const wrap = document.getElementById('calendarWrap');
+      wrap.innerHTML = '';
+
+      // 月見出し
+      const heading = document.createElement('div');
+      heading.className   = 'month-heading';
+      heading.textContent = ym.year + '年 ' + ym.month + '月';
+      wrap.appendChild(heading);
+
+      // テーブル
+      const table   = document.createElement('table');
+      table.className = 'calendar';
+
+      // thead
+      const thead   = document.createElement('thead');
+      const headRow = document.createElement('tr');
+      DAY_NAMES.forEach((name, i) => {
+        const th = document.createElement('th');
+        th.textContent = name;
+        if (i === 0) th.className = 'sun';
+        if (i === 6) th.className = 'sat';
+        headRow.appendChild(th);
+      });
+      thead.appendChild(headRow);
+      table.appendChild(thead);
+
+      // tbody
+      const tbody = document.createElement('tbody');
+      let date = 1;
+
+      for (let week = 0; week < 6; week++) {
+        if (date > lastDate) break;
+        const tr = document.createElement('tr');
+
+        for (let dow = 0; dow < 7; dow++) {
+          const td = document.createElement('td');
+
+          if ((week === 0 && dow < firstDay) || date > lastDate) {
+            td.className = 'empty';
+          } else {
+            const mm  = String(ym.month).padStart(2, '0');
+            const dd  = String(date).padStart(2, '0');
+            const key = ym.year + '-' + mm + '-' + dd;
+            const info     = dayMap[key];
+            const isClosed = info?.closed ?? false;
+
+            const cls = [isClosed ? 'closed-day' : 'open-day'];
+            if (dow === 0) cls.push('sun');
+            if (dow === 6) cls.push('sat');
+            if (
+              date     === today.getDate() &&
+              ym.month === today.getMonth() + 1 &&
+              ym.year  === today.getFullYear()
+            ) cls.push('today');
+            td.className = cls.join(' ');
+
+            // 日付数字
+            const num = document.createElement('div');
+            num.className   = 'date-num';
+            num.textContent = date;
+            td.appendChild(num);
+
+            // ステータス
+            const st = document.createElement('div');
+            st.className = 'cell-status';
+            if (isClosed) {
+              st.className += ' status-closed';
+              st.textContent = 'closed';
+            } else if (info?.hours) {
+              st.className += ' status-open';
+              st.textContent = info.hours;
+            }
+            td.appendChild(st);
+            date++;
+          }
+          tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+      }
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+
+      document.getElementById('footerInfo').textContent =
+        allData ? 'Last updated: ' + allData.shop.updated : '';
+    }
+
+    loadData();
   </script>
 </body>
 </html>
