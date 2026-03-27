@@ -146,29 +146,29 @@
   .c-info { width: 13px; height: 13px; flex-shrink: 0; color: var(--ink-mid); opacity: .4; }
 
   .c-price {
-    font-family: var(--font-serif); font-size: 1rem; font-weight: 400;
+    font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400;
     color: var(--ink); white-space: nowrap; flex-shrink: 0; text-align: right;
     letter-spacing: 0.02em;
   }
   .c-price .tx {
-    font-size: 0.6rem; font-weight: 300; font-family: var(--font-sans);
+    font-size: 0.72rem; font-weight: 300; font-family: var(--font-sans);
     margin-left: 3px; color: var(--ink-light); letter-spacing: 0.06em;
   }
-  .c-tbd { font-size: 0.68rem; font-weight: 300; color: var(--ink-light); flex-shrink: 0; }
+  .c-tbd { font-size: 0.78rem; font-weight: 300; color: var(--ink-light); flex-shrink: 0; }
 
   /* ── Stock display ── */
   .stock-line { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
   .stock-badge {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 3px 8px;
-    font-size: 0.72rem; font-weight: 400; letter-spacing: 0.06em;
+    font-size: 0.88rem; font-weight: 400; letter-spacing: 0.06em;
   }
   .stock-badge.ok  { color: var(--ink-mid); }
-  .stock-badge.low { color: var(--ink); font-weight: 500; }
+  .stock-badge.low { color: var(--ink-mid); }
   .stock-badge.out { color: var(--ink-light); }
-  .stock-badge .mark { font-size: 0.68rem; }
+  .stock-badge .mark { font-size: 0.82rem; }
   .stock-num {
-    font-family: var(--font-serif); font-size: 0.78rem; font-weight: 300;
+    font-family: var(--font-serif); font-size: 0.95rem; font-weight: 300;
     color: var(--ink-mid); font-style: italic;
   }
 
@@ -204,11 +204,11 @@
     margin-bottom: 4px; letter-spacing: 0.04em;
   }
   .md-price {
-    font-family: var(--font-serif); font-size: 1rem; font-weight: 400;
+    font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400;
     color: var(--ink); margin-bottom: 20px;
   }
   .md-price .tx {
-    font-size: 0.62rem; color: var(--ink-light);
+    font-size: 0.72rem; color: var(--ink-light);
     font-family: var(--font-sans); letter-spacing: 0.06em;
   }
   .md-div { height: 1px; background: var(--rule); margin-bottom: 16px; }
@@ -333,16 +333,23 @@ function stockHtml(stock){
   return '<div class="stock-line"><span class="stock-badge ok"><span class="mark">◎</span> 在庫あり</span><span class="stock-num">在庫 '+stock+'</span></div>';
 }
 
+function isSorbet(name){return name.includes('シャーベット')||name.includes('ソルベ');}
+
 function render(){
-  const s={total:allData.length,avail:allData.filter(d=>d.stock>0).length,low:allData.filter(d=>d.stock>0&&d.stock<=2).length,out:allData.filter(d=>d.stock===0).length};
+  const s={
+    total:allData.length,
+    ice:allData.filter(d=>!isSorbet(d.flavor)).length,
+    sorbet:allData.filter(d=>isSorbet(d.flavor)).length,
+    out:allData.filter(d=>d.stock===0).length
+  };
   document.getElementById('filterArea').innerHTML=[
-    {k:'all',l:'すべて '+s.total},{k:'available',l:'在庫あり '+s.avail},
-    {k:'low',l:'残りわずか '+s.low},{k:'out',l:'品切れ '+s.out},
+    {k:'all',l:'All '+s.total},{k:'icecream',l:'Ice Cream '+s.ice},
+    {k:'sorbet',l:'Sorbet '+s.sorbet},{k:'out',l:'Sold Out '+s.out},
   ].map(f=>`<button class="fb ${filter===f.k?'on':''}" onclick="setF('${f.k}')">${f.l}</button>`).join('');
 
   let items=allData;
-  if(filter==='available')items=items.filter(d=>d.stock>0);
-  if(filter==='low')items=items.filter(d=>d.stock>0&&d.stock<=2);
+  if(filter==='icecream')items=items.filter(d=>!isSorbet(d.flavor));
+  if(filter==='sorbet')items=items.filter(d=>isSorbet(d.flavor));
   if(filter==='out')items=items.filter(d=>d.stock===0);
   const g={};items.forEach(d=>{const c=d.container||'その他';if(!g[c])g[c]=[];g[c].push(d);});
   if(!Object.keys(g).length){document.getElementById('itemsArea').innerHTML='<div class="empty">該当する商品がありません</div>';return;}
