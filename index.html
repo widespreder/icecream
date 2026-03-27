@@ -298,7 +298,7 @@
   <nav class="sec-filter">
     <div class="filters" id="filterArea"></div>
   </nav>
-  <div class="notice-msg">在庫切れの商品はお問合せください。</div>
+  <div class="notice-msg" id="noticeMsg" style="display:none;"></div>
 </div>
 
 <div class="sec-items" id="itemsArea">
@@ -340,6 +340,16 @@ async function load(){
     const r=await fetch('inventory.json?t='+Date.now());
     const j=await r.json();
     allData=j.items||[];
+    
+    // JSONからお知らせメッセージ(notice)を取得して表示
+    const nMsg = document.getElementById('noticeMsg');
+    if(j.notice && j.notice.trim() !== ""){
+      nMsg.innerHTML = j.notice.replace(/\n/g, '<br>'); // エクセルでの改行をWeb用に変換
+      nMsg.style.display = 'block';
+    }else{
+      nMsg.style.display = 'none';
+    }
+
     document.getElementById('footer').style.display='block';
     render();
   }catch(e){
