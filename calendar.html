@@ -23,7 +23,6 @@
       --white:      #ffffff;
       --font-serif: 'Cormorant Garamond', 'Hiragino Mincho ProN', serif;
       --font-sans:  'Noto Sans JP', 'Hiragino Sans', sans-serif;
-      /* タップターゲット最小44px */
       --tap-min:    44px;
     }
 
@@ -38,12 +37,10 @@
       font-family: var(--font-sans);
       font-weight: 300;
       min-height: 100vh;
-      /* iOS Safe Area 対応 */
       padding-bottom: env(safe-area-inset-bottom, 32px);
       -webkit-tap-highlight-color: transparent;
     }
 
-    /* ── ヘッダー ── */
     header {
       border-bottom: 1px solid var(--ink);
       padding: 28px 20px 18px;
@@ -66,7 +63,6 @@
       letter-spacing: 0.06em;
     }
 
-    /* ── 当月・翌月タブ ── */
     .month-tabs {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -103,7 +99,6 @@
       background: var(--paper-warm);
     }
 
-    /* ── 凡例 ── */
     .legend {
       display: flex;
       align-items: center;
@@ -129,7 +124,6 @@
     .legend-dot.open   { background: var(--ink); }
     .legend-dot.closed { background: var(--closed-bg); border: 1px solid var(--rule); }
 
-    /* ── 月見出し ── */
     .month-heading {
       font-family: var(--font-serif);
       font-size: 1.15rem;
@@ -140,18 +134,15 @@
       color: var(--ink);
     }
 
-    /* ── カレンダーラッパー ── */
     .calendar-wrap {
       padding: 0 12px;
-      /* 横スクロールさせない */
       overflow-x: hidden;
     }
 
-    /* ── テーブル（モバイルファースト） ── */
     table.calendar {
       width: 100%;
       border-collapse: collapse;
-      table-layout: fixed; /* 列幅均等 */
+      table-layout: fixed;
     }
 
     table.calendar thead th {
@@ -169,8 +160,7 @@
     table.calendar tbody td {
       vertical-align: top;
       border: 1px solid var(--rule);
-      /* 正方形に近いセル：vwベースで高さを確保 */
-      height: calc((100vw - 24px) / 7 * 1.45);
+      height: 72px;
       padding: 5px 3px 4px;
       position: relative;
     }
@@ -179,7 +169,6 @@
     table.calendar tbody td.open-day   { background: var(--white); }
     table.calendar tbody td.closed-day { background: var(--closed-bg); }
 
-    /* 今日マーカー */
     table.calendar tbody td.today .date-num {
       position: relative;
     }
@@ -194,7 +183,7 @@
 
     .date-num {
       font-family: var(--font-serif);
-      font-size: clamp(0.85rem, 3.5vw, 1.05rem);
+      font-size: 1rem;
       font-weight: 300;
       text-align: center;
       line-height: 1;
@@ -210,12 +199,11 @@
       margin-top: 2px;
     }
 
-    /* 営業時間：縦2行 + 区切り線 */
     .status-open {
       color: var(--ink-mid);
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: clamp(0.72rem, 2.8vw, 0.88rem);
+      font-size: 0.78rem;
       font-weight: 600;
       letter-spacing: 0.04em;
     }
@@ -231,17 +219,15 @@
       line-height: 1;
     }
 
-    /* closed：やや大きくボールド */
     .status-closed {
       color: var(--ink-mid);
       font-family: var(--font-serif);
       font-style: italic;
-      font-size: clamp(0.72rem, 2.8vw, 0.88rem);
+      font-size: 0.78rem;
       font-weight: 600;
       letter-spacing: 0.04em;
     }
 
-    /* ── フッター ── */
     .footer-info {
       padding: 16px 20px 0;
       text-align: right;
@@ -267,14 +253,12 @@
       line-height: 1.8;
     }
 
-    /* ── アニメーション ── */
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(4px); }
       to   { opacity: 1; transform: translateY(0); }
     }
     .calendar-wrap > * { animation: fadeIn 0.28s ease both; }
 
-    /* ── デスクトップ補正（768px以上） ── */
     @media (min-width: 768px) {
       header { padding: 36px 40px 22px; flex-direction: row; align-items: flex-end; justify-content: space-between; }
       .shop-name { font-size: 2rem; }
@@ -288,7 +272,6 @@
         padding: 10px 10px 14px;
       }
       .date-num    { font-size: 1.1rem; margin-bottom: 6px; }
-      .cell-status { }
       .status-open { font-size: 0.6rem; }
       .status-closed { font-size: 0.9rem; }
     }
@@ -298,7 +281,7 @@
 
   <header>
     <div class="shop-name">glacemyth Ice Cream</div>
-    <div class="header-meta" id="headerMeta">読み込み中…</div>
+    <div class="header-meta" id="headerMeta">データ更新日: 2026-03-27</div>
   </header>
 
   <div class="month-tabs">
@@ -306,9 +289,7 @@
     <button class="tab-btn"        id="tabNext" onclick="switchTab(1)">Next Month</button>
   </div>
 
-  <div class="legend">
-    <div class="legend-item"><div class="legend-dot closed"></div>closed</div>
-  </div>
+
 
   <div class="calendar-wrap" id="calendarWrap">
     <div class="loading-msg">読み込み中…</div>
@@ -317,8 +298,85 @@
   <div class="footer-info" id="footerInfo"></div>
 
   <script>
-    const DATA_URL  = './calendar_data.json';
     const DAY_NAMES = ['日','月','火','水','木','金','土'];
+
+    // デモ用サンプルデータ（calendar_data.json が取得できない環境用）
+    const SAMPLE_DATA = {
+      shop: { updated: '2026-03-27' },
+      months: [
+        {
+          year: 2026, month: 3,
+          days: [
+            { date: '2026-03-01', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-02', closed: true,  label: 'closed' },
+            { date: '2026-03-03', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-04', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-05', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-06', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-07', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-03-08', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-03-09', closed: true,  label: 'closed' },
+            { date: '2026-03-10', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-11', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-12', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-13', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-14', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-03-15', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-03-16', closed: true,  label: 'closed' },
+            { date: '2026-03-17', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-18', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-19', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-20', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-21', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-03-22', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-03-23', closed: true,  label: 'closed' },
+            { date: '2026-03-24', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-25', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-26', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-27', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-03-28', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-03-29', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-03-30', closed: true,  label: 'closed' },
+            { date: '2026-03-31', closed: false, label: '10:00 - 18:00' },
+          ]
+        },
+        {
+          year: 2026, month: 4,
+          days: [
+            { date: '2026-04-01', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-02', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-03', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-04', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-05', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-06', closed: true,  label: 'closed' },
+            { date: '2026-04-07', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-08', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-09', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-10', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-11', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-12', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-13', closed: true,  label: 'closed' },
+            { date: '2026-04-14', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-15', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-16', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-17', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-18', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-19', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-20', closed: true,  label: 'closed' },
+            { date: '2026-04-21', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-22', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-23', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-24', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-25', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-26', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-27', closed: true,  label: 'closed' },
+            { date: '2026-04-28', closed: false, label: '10:00 - 18:00' },
+            { date: '2026-04-29', closed: false, label: '10:00 - 19:00' },
+            { date: '2026-04-30', closed: false, label: '10:00 - 18:00' },
+          ]
+        }
+      ]
+    };
 
     let allData = null;
     let offset  = 0;
@@ -331,18 +389,11 @@
       return { year: y, month: m };
     }
 
-    async function loadData() {
-      try {
-        const res = await fetch(DATA_URL + '?_=' + Date.now());
-        if (!res.ok) throw new Error('HTTP ' + res.status);
-        allData = await res.json();
-        document.getElementById('headerMeta').textContent =
-          'データ更新日: ' + allData.shop.updated;
-        render();
-      } catch (e) {
-        document.getElementById('calendarWrap').innerHTML =
-          '<div class="error-msg">データの読み込みに失敗しました。<br>しばらくしてから再度お試しください。</div>';
-      }
+    function init() {
+      allData = SAMPLE_DATA;
+      document.getElementById('headerMeta').textContent =
+        'データ更新日: ' + allData.shop.updated;
+      render();
     }
 
     function switchTab(off) {
@@ -367,17 +418,14 @@
       const wrap = document.getElementById('calendarWrap');
       wrap.innerHTML = '';
 
-      // 月見出し
       const heading = document.createElement('div');
       heading.className   = 'month-heading';
       heading.textContent = ym.year + '年 ' + ym.month + '月';
       wrap.appendChild(heading);
 
-      // テーブル
       const table   = document.createElement('table');
       table.className = 'calendar';
 
-      // thead
       const thead   = document.createElement('thead');
       const headRow = document.createElement('tr');
       DAY_NAMES.forEach((name, i) => {
@@ -390,7 +438,6 @@
       thead.appendChild(headRow);
       table.appendChild(thead);
 
-      // tbody
       const tbody = document.createElement('tbody');
       let date = 1;
 
@@ -420,22 +467,18 @@
             ) cls.push('today');
             td.className = cls.join(' ');
 
-            // 日付数字
             const num = document.createElement('div');
             num.className   = 'date-num';
             num.textContent = date;
             td.appendChild(num);
 
-            // E列の値をそのままセルに表示
             const label = info?.label ?? '';
             if (label !== '') {
               const st = document.createElement('div');
               if (isClosed) {
-                // closed はそのまま表示
                 st.className = 'cell-status status-closed';
                 st.textContent = label;
               } else {
-                // 営業時間は " - " で分割して縦表示
                 st.className = 'cell-status status-open';
                 const parts = label.split(' - ');
                 if (parts.length === 2) {
@@ -470,7 +513,7 @@
         allData ? 'Last updated: ' + allData.shop.updated : '';
     }
 
-    loadData();
+    init();
   </script>
 </body>
 </html>
