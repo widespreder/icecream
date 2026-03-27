@@ -410,17 +410,14 @@
             num.textContent = date;
             td.appendChild(num);
 
-            // ステータス
-            const st = document.createElement('div');
-            st.className = 'cell-status';
-            if (isClosed) {
-              st.className += ' status-closed';
-              st.textContent = 'closed';
-            } else if (info?.hours) {
-              st.className += ' status-open';
-              st.textContent = info.hours;
+            // E列の値をそのままセルに表示
+            const label = info?.label ?? '';
+            if (label !== '') {
+              const st = document.createElement('div');
+              st.className = 'cell-status ' + (isClosed ? 'status-closed' : 'status-open');
+              st.textContent = label;
+              td.appendChild(st);
             }
-            td.appendChild(st);
             date++;
           }
           tr.appendChild(td);
