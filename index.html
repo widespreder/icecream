@@ -67,19 +67,22 @@
     opacity: 0; animation: fadeIn .7s ease .4s forwards;
   }
   .hero-sub {
-    font-family: var(--font-sans);
-    font-size: clamp(0.68rem, 2vw, 0.78rem); font-weight: 300;
-    letter-spacing: 0.2em; color: var(--ink-light);
+    font-family: var(--font-serif);
+    font-size: clamp(1.1rem, 3vw, 1.4rem); font-weight: 300; font-style: italic;
+    letter-spacing: 0.15em; color: var(--ink-mid);
     opacity: 0; animation: fadeIn .7s ease .6s forwards;
+    margin-top: 4px;
   }
 
-  /* ── Filter bar ── */
-  .sec-filter {
-    background: var(--paper);
-    padding: 14px 12px;
-    text-align: center;
+  /* ── Filter bar & Sticky Header ── */
+  .sticky-header {
     position: sticky; top: 0; z-index: 50;
+    background: var(--paper);
     border-bottom: 1px solid var(--rule);
+  }
+  .sec-filter {
+    padding: 14px 12px 12px;
+    text-align: center;
     overflow-x: auto; -webkit-overflow-scrolling: touch;
   }
   .filters {
@@ -99,15 +102,25 @@
   .fb:not(.on):active { background: var(--paper-warm); }
   .fb.on { background: var(--ink); color: #fff; border-color: var(--ink); }
 
+  /* ── Notice Message ── */
+  .notice-msg {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 300;
+    color: var(--ink-mid);
+    padding: 0 20px 14px;
+    letter-spacing: 0.08em;
+  }
+
   /* ── Items area ── */
-  .sec-items { max-width: 640px; margin: 0 auto; padding: 40px 20px 80px; }
+  .sec-items { max-width: 640px; margin: 0 auto; padding: 32px 16px 80px; }
 
   .cat-block { margin-bottom: 48px; }
   .cat-title {
     font-family: var(--font-serif);
     font-size: 1.3rem; font-weight: 300;
     letter-spacing: 0.14em; color: var(--ink);
-    text-align: center; margin-bottom: 28px;
+    text-align: center; margin-bottom: 24px;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--rule);
   }
@@ -116,14 +129,12 @@
   .card {
     background: var(--white);
     border: 1px solid var(--rule);
-    padding: 16px 18px; margin-bottom: 8px;
-    display: flex; align-items: center; gap: 14px;
+    padding: 12px 14px; margin-bottom: 8px;
+    display: flex; align-items: center; gap: 12px;
     cursor: pointer; user-select: none; -webkit-user-select: none;
     transition: background .18s;
   }
   .card:active { background: var(--paper-warm); }
-  .card.out { opacity: .4; background: var(--closed-bg); }
-  .card.out:active { background: var(--closed-bg); }
   .card.nc { cursor: default; }
   .card.nc:active { background: var(--white); }
 
@@ -133,20 +144,25 @@
   }
   .c-body { flex: 1; min-width: 0; }
   .c-top {
-    display: flex; align-items: baseline;
-    justify-content: space-between; gap: 10px; margin-bottom: 5px;
+    display: flex; align-items: center;
+    justify-content: space-between; gap: 8px; margin-bottom: 5px;
   }
   .c-name {
-    font-family: var(--font-sans);
-    font-size: 0.92rem; font-weight: 400; color: var(--ink);
-    display: flex; align-items: center; gap: 6px; min-width: 0;
-    letter-spacing: 0.04em;
+    display: flex; align-items: center; gap: 6px; min-width: 0; flex: 1;
   }
-  .c-name.x { color: var(--ink-light); text-decoration: line-through; text-decoration-color: var(--rule); }
+  .c-name .txt {
+    font-family: var(--font-sans);
+    font-size: clamp(0.75rem, 3.8vw, 0.92rem);
+    font-weight: 400; color: var(--ink);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   .c-info { width: 13px; height: 13px; flex-shrink: 0; color: var(--ink-mid); opacity: .4; }
 
   .c-price {
-    font-family: var(--font-serif); font-size: 1.25rem; font-weight: 400;
+    font-family: var(--font-serif); font-size: clamp(1.05rem, 4.5vw, 1.25rem); font-weight: 400;
     color: var(--ink); white-space: nowrap; flex-shrink: 0; text-align: right;
     letter-spacing: 0.02em;
   }
@@ -154,7 +170,7 @@
     font-size: 0.72rem; font-weight: 300; font-family: var(--font-sans);
     margin-left: 3px; color: var(--ink-light); letter-spacing: 0.06em;
   }
-  .c-tbd { font-size: 0.78rem; font-weight: 300; color: var(--ink-light); flex-shrink: 0; }
+  .c-tbd { font-size: clamp(0.7rem, 3vw, 0.78rem); font-weight: 300; color: var(--ink-light); flex-shrink: 0; }
 
   /* ── Stock display ── */
   .stock-line { display: flex; align-items: center; gap: 8px; margin-top: 3px; }
@@ -168,9 +184,11 @@
   .stock-badge.out { color: var(--ink-light); }
   .stock-badge .mark { font-size: 0.82rem; }
   .stock-num {
-    font-family: var(--font-serif); font-size: 0.95rem; font-weight: 300;
+    font-family: var(--font-serif);
     color: var(--ink-mid); font-style: italic;
   }
+  .stock-num .label { font-size: 0.95rem; font-weight: 300; }
+  .stock-num .val { font-size: 1.4rem; font-weight: 400; }
 
   /* ── Modal ── */
   .ov {
@@ -258,10 +276,11 @@
   /* ── Desktop ── */
   @media (min-width: 768px) {
     .hero { padding: 52px 40px 32px; }
-    .sec-filter { padding: 14px 40px; }
+    .sec-filter { padding: 14px 40px 12px; }
+    .notice-msg { padding: 0 40px 16px; font-size: 0.8rem; }
     .sec-items { padding: 48px 40px 80px; }
+    .card { padding: 16px 18px; gap: 14px; }
     .card:hover { background: var(--paper-warm); }
-    .card.out:hover { background: var(--closed-bg); }
     .card.nc:hover { background: var(--white); }
     .fb:hover { border-color: var(--ink-mid); color: var(--ink); }
     .md-close:hover { background: var(--paper-warm); color: var(--ink); }
@@ -271,16 +290,20 @@
 <body>
 
 <section class="hero">
-  <p class="hero-tag">I love Ice Cream</p>
   <h1 class="hero-title">glacemyth</h1>
-  <p class="hero-sub">アイスクリーム</p>
+  <p class="hero-sub">Ice Cream</p>
 </section>
 
-<nav class="sec-filter">
-  <div class="filters" id="filterArea"></div>
-</nav>
+<div class="sticky-header">
+  <nav class="sec-filter">
+    <div class="filters" id="filterArea"></div>
+  </nav>
+  <div class="notice-msg">在庫切れの商品はお問合せください。</div>
+</div>
 
-<div class="sec-items" id="itemsArea"></div>
+<div class="sec-items" id="itemsArea">
+  <div class="empty">読み込み中...</div>
+</div>
 <div class="footer" id="footer" style="display:none">© glacemyth Ice Cream</div>
 
 <div class="ov" id="overlay" onclick="closeM(event)">
@@ -298,15 +321,16 @@
 </div>
 
 <script>
+// 色の設定
 const C={
-  'バニラ':'#8a7e6e','抹茶':'#6b7a5c','チョコチップ':'#6e6058',
-  'ラムレーズンアイスチーズ':'#8a7050','ラムレーズン':'#6e5a70',
-  '苺':'#8e5060','ピスタチオ':'#5a7a50','塩バニラ':'#5e6a7a',
-  'チョコミント':'#4a7a76','キャラメル':'#8a7050','クッキー':'#7a7060',
-  'さつまいも':'#705068','マロン':'#6e6050','パッション':'#8a6040',
-  'ラズベリー':'#7a4060','チーズ':'#8a7840',
+  'バニラ':'#f3e5ab','抹茶':'#6b7a5c','チョコチップ':'#6e6058',
+  'ラムレーズンアイスチーズ':'#e2d2b0','ラムレーズン':'#6e5a70',
+  '苺':'#e57373','ピスタチオ':'#8bc34a','塩バニラ':'#cfd8dc',
+  'チョコミント':'#4db6ac','キャラメル':'#ffa726','クッキー':'#7a7060',
+  'さつまいも':'#ba68c8','マロン':'#a1887f','パッション':'#ffd54f',
+  'ラズベリー':'#f06292','チーズ':'#fff176',
 };
-function gc(n){const k=Object.keys(C).sort((a,b)=>b.length-a.length);for(const c of k)if(n.includes(c))return C[c];return'#888888';}
+function gc(n){const k=Object.keys(C).sort((a,b)=>b.length-a.length);for(const c of k)if(n.includes(c))return C[c];return'#dcdcdc';}
 const INFO='<svg class="c-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>';
 
 let allData=[],filter='all';
@@ -317,9 +341,9 @@ async function load(){
     const j=await r.json();
     allData=j.items||[];
     document.getElementById('footer').style.display='block';
-    render();observe();
+    render();
   }catch(e){
-    document.getElementById('itemsArea').innerHTML='<div class="empty">inventory.json が見つかりません</div>';
+    document.getElementById('itemsArea').innerHTML='<div class="empty">inventory.json が読み込めません</div>';
   }
 }
 
@@ -328,9 +352,9 @@ function stockHtml(stock){
     return '<div class="stock-line"><span class="stock-badge out"><span class="mark">✕</span> 品切れ</span></div>';
   }
   if(stock<=2){
-    return '<div class="stock-line"><span class="stock-badge low"><span class="mark">△</span> 残りわずか</span><span class="stock-num">在庫 '+stock+'</span></div>';
+    return '<div class="stock-line"><span class="stock-badge low"><span class="mark">△</span> 残りわずか</span><span class="stock-num"><span class="label">在庫</span> <span class="val">'+stock+'</span></span></div>';
   }
-  return '<div class="stock-line"><span class="stock-badge ok"><span class="mark">◎</span> 在庫あり</span><span class="stock-num">在庫 '+stock+'</span></div>';
+  return '<div class="stock-line"><span class="stock-badge ok"><span class="mark">◎</span> 在庫あり</span><span class="stock-num"><span class="label">在庫</span> <span class="val">'+stock+'</span></span></div>';
 }
 
 function isSorbet(name){return name.includes('シャーベット')||name.includes('ソルベ');}
@@ -351,21 +375,31 @@ function render(){
   if(filter==='icecream')items=items.filter(d=>!isSorbet(d.flavor));
   if(filter==='sorbet')items=items.filter(d=>isSorbet(d.flavor));
   if(filter==='out')items=items.filter(d=>d.stock===0);
-  const g={};items.forEach(d=>{const c=d.container||'その他';if(!g[c])g[c]=[];g[c].push(d);});
-  if(!Object.keys(g).length){document.getElementById('itemsArea').innerHTML='<div class="empty">該当する商品がありません</div>';return;}
+  
+  const g={};
+  items.forEach(d=>{
+    const c=(d.container||'その他').replace(/【/g, '').replace(/】/g, '');
+    if(!g[c])g[c]=[];
+    g[c].push(d);
+  });
+
+  if(!Object.keys(g).length){
+    document.getElementById('itemsArea').innerHTML='<div class="empty">該当する商品がありません</div>';
+    return;
+  }
 
   let h='';
   for(const[cat,list]of Object.entries(g)){
     h+=`<div class="cat-block reveal"><div class="cat-title">${cat}</div>`;
     for(const it of list){
-      const o=it.stock===0,clr=o?'#c8c6c2':gc(it.flavor);
+      const clr=gc(it.flavor);
       const hc=it.comment&&it.comment.trim(),hi=it.image&&it.image.trim(),hd=hc||hi;
-      const price=it.price>0?`<div class="c-price">¥${it.price.toLocaleString()}<span class="tx">税込</span></div>`:(!o?'<div class="c-tbd">価格未定</div>':'');
+      const price=it.price>0?`<div class="c-price">¥${it.price.toLocaleString()}<span class="tx">税込</span></div>`:'<div class="c-tbd">価格未定</div>';
       const click=hd?`onclick="showM('${esc(it.flavor)}',${it.price||0},'${clr}','${esc(it.comment||'')}','${esc(it.image||'')}')"`:''
-      h+=`<div class="card ${o?'out':''} ${hd?'':'nc'}" ${click}>
+      h+=`<div class="card ${hd?'':'nc'}" ${click}>
         <div class="c-dot" style="background:${clr}"></div>
         <div class="c-body">
-          <div class="c-top"><div class="c-name ${o?'x':''}">${it.flavor}${hd?INFO:''}</div>${price}</div>
+          <div class="c-top"><div class="c-name"><span class="txt">${it.flavor}</span>${hd?INFO:''}</div>${price}</div>
           ${stockHtml(it.stock)}
         </div>
       </div>`;
