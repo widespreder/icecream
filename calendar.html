@@ -276,6 +276,11 @@
 
     /* ── デスクトップ補正（768px以上） ── */
     @media (min-width: 768px) {
+      body {
+        max-width: 720px;
+        margin-left: auto;
+        margin-right: auto;
+      }
       header { padding: 36px 40px 22px; flex-direction: row; align-items: flex-end; justify-content: space-between; }
       .shop-name { font-size: 2rem; }
       .month-tabs { margin: 24px 40px 0; border-radius: 4px; }
